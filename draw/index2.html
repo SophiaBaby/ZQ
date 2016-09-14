@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>我画你猜</title>
+    <style>
+
+        html,body,div,canvas,input{
+
+            margin: 0;
+
+            padding: 0;
+
+        }
+
+        #box{
+            width: 500px;
+            height: 500px;
+            border: 1px solid green;
+            margin: 100px auto;
+        }
+
+        #box .top{
+            height: 100px;
+        }
+
+        #canvas{
+
+            background-color: gainsboro;
+
+        }
+
+    </style>
+
+
+</head>
+<body>
+
+    <div id="box">
+
+        <div class="top"></div>
+        <canvas id = "canvas" width="500" height="400"></canvas>
+
+        <script>
+
+            var canvas = document.getElementById("canvas");
+
+            var cxt = canvas.getContext("2d");
+
+            canvas.addEventListener("mousedown",function (e) {
+
+                console.log("down");
+
+                draw();
+
+                canvas.addEventListener("mousemove",move);
+                canvas.addEventListener("mouseup",up);
+            })
+
+            function move(e) {
+                console.log("move");
+                draw();
+            }
+
+            function up(e) {
+
+                console.log("up");
+
+                canvas.removeEventListener("mousemove",move);
+
+                canvas.removeEventListener("mouseup",arguments.callee);
+            }
+
+            function draw(x,y) {
+
+
+
+
+            }
+
+        </script>
+
+    </div>
+
+</body>
+</html>

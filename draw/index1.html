@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>我画你猜面向对象版本</title>
+
+    <style>
+
+        html,body,div,canvas,input{
+            margin: 0;
+            padding: 0;
+        }
+
+        #box{
+            width: 500px;
+            height: 500px;
+            margin: 100px auto;
+        }
+
+        #canvas{
+            background-color: gainsboro;
+        }
+
+        #box .top{
+            height: 100px;
+        }
+
+        .top input{
+            border-radius: 5px;
+            background-color: gainsboro;
+            margin: 10px 0 10px 30px;
+            width: 30px;
+            height: 30px;
+        }
+
+        .top .c1{
+            background-color: brown;
+        }
+
+        .top .c2{
+            background-color: blueviolet;
+        }
+
+        .top .c3{
+            background-color: coral;
+        }
+
+        .top .c4{
+            background-color: green;
+        }
+
+        #clear{
+
+            width: 100px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            background-color: gainsboro;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div id="box">
+    <div class="top">
+        <div id ="color">
+            选择颜色:
+            <input class="c1" type="button">
+            <input class="c2" type="button">
+            <input class="c3" type="button">
+            <input class="c4"  type="button">
+        </div>
+        <div id = "clear">清空画布</div>
+    </div>
+    <canvas id="canvas" width="500" height="400">
+
+    </canvas>
+
+    <script>
+
+
+        (function () {
+
+            var board = {
+
+                init:function (canEle,clearBtn,colorBtns) {
+
+                    this.canvas = canEle;
+
+                    this.clearBtn = clearBtn;
+
+                    this.colors = colorBtns;
+
+                    this.cxt = this.canvas.getContext("2d");
+
+                    this.oldPoint = {};
+
+                    this.bind();
+
+                    this.clearLayer();
+
+                    this.changeColor();
+
+
+                },
+
+                bind:function () {
+
+                    var t = this;
+
+                    t.canvas.addEventListener("mousedown",function (e) {
+
+                        t.canvas.addEventListener("mousemove",move);
+
+                        t.canvas.addEventListener("mouseup",up);
+
+                        var x = e.clientX - t.canvas.offsetLeft;
+
+                        var y = e.clientY + document.body.scrollTop - t.canvas.offsetTop;
+
+                        t.oldPoint.x = x - 1;
+
+                        t.oldPoint.y = y;
+
+                        t.draw(x,y);
+
+                    })
+
+                    function move(e) {
+
+                        var x = e.clientX - t.canvas.offsetLeft;
+
+                        var y = e.clientY + document.body.scrollTop - t.canvas.offsetTop;
+
+                        t.draw(x,y);
+
+
+                    }
+
+                    function up(e) {
+
+                        t.canvas.removeEventListener("mousemove",move);
+
+                        t.canvas.removeEventListener("mouseup",up);
+
+                    }
+
+
+                },
+
+                draw:function (x,y) {
+
+
+                    this.cxt.beginPath();
+
+                    this.cxt.moveTo(this.oldPoint.x,this.oldPoint.y);
+
+                    this.cxt.lineTo(x,y);
+
+                    this.cxt.closePath();
+
+                    this.cxt.lineWidth = 5;
+
+                    this.cxt.lineCap = "round";
+
+                    this.cxt.lineJoin = "round";
+
+                    this.cxt.stroke();
+
+                    this.oldPoint.x = x;
+
+                    this.oldPoint.y = y;
+
+                },
+
+                changeColor:function () {
+
+                    var t = this;
+
+                    for (var i = 0; i < t.colors.length; i ++){
+
+                        t.colors[i].onclick = function () {
+
+                            t.cxt.strokeStyle = getComputedStyle(this).backgroundColor;
+                        }
+                    }
+
+                },
+
+                clearLayer:function () {
+
+                    var t = this;
+
+                    t.clearBtn.onclick = function () {
+
+                        t.cxt.clearRect(0,0,can.width,can.height);
+
+                    }
+
+                }
+
+
+            }
+
+
+
+            var can = document.getElementById("canvas");
+
+            var clear = document.getElementById("clear");
+
+            var colors = document.getElementById("color").getElementsByTagName("input");
+
+
+            board.init(can,clear,colors);
+
+
+
+        })();
+
+
+
+
+
+
+
+
+
+
+
+
+//        var cxt = can.getContext("2d");
+//
+//        var lodPoint = {};
+//
+//        can.addEventListener("mousedown",function (e) {
+//
+//            can.addEventListener("mousemove",move);
+//
+//            can.addEventListener("mouseup",up);
+//
+//            var x = e.clientX - can.offsetLeft;
+//
+//            var y = e.clientY + document.body.scrollTop - can.offsetTop;
+//
+//            lodPoint.x = x - 1;
+//
+//            lodPoint.y = y;
+//
+//            draw(x,y);
+//
+//
+//        })
+//
+//        function move(e) {
+//
+//            console.log("move");
+//
+//            var x = e.clientX - can.offsetLeft;
+//
+//            var y = e.clientY + document.body.scrollTop - can.offsetTop;
+//
+//            draw(x,y);
+//
+//
+//        }
+//
+//        function up(e) {
+//
+//            console.log("up");
+//
+//            can.removeEventListener("mousemove",move);
+//
+//            can.removeEventListener("mouseup",up);
+//
+//        }
+//
+//        function draw(x,y) {
+//
+//            cxt.beginPath();
+//
+//            cxt.moveTo(lodPoint.x,lodPoint.y);
+//
+//            cxt.lineTo(x,y);
+//
+//            cxt.closePath();
+//
+//            cxt.lineWidth = 5;
+//
+//            cxt.lineCap = "round";
+//
+//            cxt.lineJoin = "round";
+//
+//            cxt.stroke();
+//
+//            lodPoint.x = x;
+//
+//            lodPoint.y = y;
+//
+//        }
+//
+//        function changeColor() {
+//
+//            var colors = document.getElementById("color").getElementsByTagName("input");
+//
+//            for (var i = 0; i < colors.length; i ++){
+//
+//                colors[i].onclick = function () {
+//
+//                    cxt.strokeStyle = getComputedStyle(this).backgroundColor;
+//                }
+//            }
+//
+//        }
+//
+//        changeColor();
+//
+//        function clearLayer() {
+//
+//            var clear = document.getElementById("clear");
+//
+//            clear.onclick = function () {
+//
+//                cxt.clearRect(0,0,can.width,can.height);
+//
+//            }
+//
+//        }
+//
+//        clearLayer();
+
+    </script>
+
+
+</div>
+</body>
+</html>
